@@ -105,9 +105,9 @@ view: store_returns {
   dimension: is_less30{
     type: yesno
     sql:
-      ${date_dim.d_date} >= to_date({% parameter date_dim.datefilter %})
+      ${date_dim.d_date} >= {% parameter date_dim.datefilter %}
       and
-      ${date_dim.d_date} <= to_date({% parameter date_dim.datefilter %}) + 30 ;;
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %} + 30 ;;
   }
   measure: 30Days {
     type:sum
@@ -121,9 +121,9 @@ view: store_returns {
   dimension: is_less60{
     type: yesno
     sql:
-      ${date_dim.d_date} >= to_date({% parameter date_dim.datefilter %})
+      ${date_dim.d_date} >= {% parameter date_dim.datefilter %}
       and
-      ${date_dim.d_date} <= to_date({% parameter date_dim.datefilter %}) + 60 ;;
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %} + 60 ;;
   }
   measure: 60Days {
     type:sum
@@ -137,9 +137,9 @@ view: store_returns {
   dimension: is_less90{
     type: yesno
     sql:
-      ${date_dim.d_date} >= to_date({% parameter date_dim.datefilter %})
+      ${date_dim.d_date} >= {% parameter date_dim.datefilter %}
       and
-      ${date_dim.d_date} <= to_date({% parameter date_dim.datefilter %}) + 90 ;;
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %} + 90 ;;
   }
   measure: 90Days {
     type:sum
@@ -153,9 +153,9 @@ view: store_returns {
   dimension: is_above90{
     type: yesno
     sql:
-      ${date_dim.d_date} >= to_date({% parameter date_dim.datefilter %}) + 91
+      ${date_dim.d_date} >= {% parameter date_dim.datefilter %} + 91
       and
-      ${date_dim.d_date} <= to_date({% parameter date_dim.datefilter %}) + 364 ;;
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %} + 364 ;;
   }
   measure: after90Days {
     type:sum
