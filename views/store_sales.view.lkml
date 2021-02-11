@@ -1,5 +1,5 @@
 view: store_sales {
-  sql_table_name: TPC_DS_DEV.STORE_SALES ;;
+  sql_table_name: TPC_DS.STORE_SALES ;;
 
   dimension: ss_addr_sk {
     type: number
@@ -117,6 +117,166 @@ view: store_sales {
     sql: ${TABLE}.SS_WHOLESALE_COST ;;
   }
 
+  # Custom dimention
+
+  dimension: is_ytd{
+    type: yesno
+    sql:
+      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
+      ;;
+  }
+  dimension: is_mtd{
+    type: yesno
+    sql:
+      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
+      ;;
+  }
+  dimension: is_sply_ytd{
+    type: yesno
+    sql:
+      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
+      and
+      ${date_dim.d_date}<= DATEADD(day,-365,{% parameter date_dim.datefilter %})
+      ;;
+  }
+  dimension: is_sply_mtd{
+    type: yesno
+    sql:
+      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
+      ;;
+  }
+
+  measure: ytd_CustCount {
+    type:count_distinct
+    sql: ${ss_customer_sk} ;;
+    filters: {
+      field: is_ytd
+      value: "yes"
+    }
+  }
+  measure: mtd_CustCount {
+    type:count_distinct
+    sql: ${ss_customer_sk} ;;
+    filters: {
+      field: is_mtd
+      value: "yes"
+    }
+  }
+  measure: sply_ytd_CustCount {
+    type:count_distinct
+    sql: ${ss_customer_sk} ;;
+    filters: {
+      field: is_sply_ytd
+      value: "yes"
+    }
+  }
+  measure: sply_mtd_CustCount {
+    type:count_distinct
+    sql: ${ss_customer_sk} ;;
+    filters: {
+      field: is_sply_mtd
+      value: "yes"
+    }
+  }
+
+
+  measure: ss_sales_price_ytd {
+    type: sum
+    sql: ${TABLE}."SS_SALES_PRICE" ;;
+    filters: [is_ytd: "yes"]
+  }
+  measure: ss_sales_price_mtd {
+    type: sum
+    sql: ${TABLE}."SS_SALES_PRICE" ;;
+    filters: [is_mtd: "yes"]
+  }
+  measure: ss_sales_price_sply_ytd {
+    type: sum
+    sql: ${TABLE}."SS_SALES_PRICE" ;;
+    filters: [is_sply_ytd: "yes"]
+  }
+  measure: ss_sales_price_sply_mtd {
+    type: sum
+    sql: ${TABLE}."SS_SALES_PRICE" ;;
+    filters: [is_sply_mtd: "yes"]
+  }
+
+
+  dimension: currentYear{
+    type: yesno
+    sql:
+      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      ;;
+  }
+  dimension: previousYear{
+    type: yesno
+    sql:
+      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      ;;
+  }
+  measure: currentyear_sales {
+    type: sum
+    sql:  ${TABLE}."SS_SALES_PRICE";;
+    filters: [currentYear: "yes"]
+  }
+  measure: previousyear_sales {
+    type: sum
+    sql:  ${TABLE}."SS_SALES_PRICE";;
+    filters: [previousYear: "yes"]
+  }
+  measure: sales_ratio {
+    type: number
+    sql: (${currentyear_sales}-${previousyear_sales})/${previousyear_sales} * 100 ;;
+  }
+  dimension: Weekcount {
+    type: number
+    sql: datepart(week,${date_dim.d_date}) ;;
+  }
+  dimension: Weekday {
+    type: number
+    sql: DATEPART(WEEKDAY,${date_dim.d_date})  ;;
+  }
+
+
+  dimension: weekdays {
+    type: string
+    sql: CASE
+        WHEN DATEPART(WEEKDAY,${date_dim.d_date}) = 1 THEN 'Sunday'
+        WHEN DATEPART(WEEKDAY,${date_dim.d_date}) = 2 THEN 'Monday'
+        WHEN DATEPART(WEEKDAY,${date_dim.d_date}) = 3 THEN 'Tuesday'
+        WHEN DATEPART(WEEKDAY,${date_dim.d_date}) = 4 THEN 'Wednesday'
+        WHEN DATEPART(WEEKDAY,${date_dim.d_date}) = 5 THEN 'Thursday'
+        WHEN DATEPART(WEEKDAY,${date_dim.d_date}) = 6 THEN 'Friday'
+        WHEN DATEPART(WEEKDAY,${date_dim.d_date}) = 7 THEN 'Saturday'
+        ELSE 'null'
+        END ;;
+  }
+
+
+
+  dimension: ss_issalesPriceTop10 {
+    type: yesno
+    sql: ${date_dim.d_month} = substring(CONVERT(VARCHAR(7),{% parameter date_dim.datefilter %},120),1,7);;
+  }
+  measure: ss_salesprice {
+    type: sum
+    sql: ${TABLE}."SS_SALES_PRICE";;
+    filters: [ss_issalesPriceTop10: "yes"]
+  }
   measure: count {
     type: count
     drill_fields: []

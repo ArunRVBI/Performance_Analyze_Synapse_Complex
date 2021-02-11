@@ -1,5 +1,5 @@
 view: date_dim {
-  sql_table_name: TPC_DS_DEV.DATE_DIM ;;
+  sql_table_name: TPC_DS.DATE_DIM ;;
 
   dimension: d_current_day {
     type: string

@@ -1,5 +1,5 @@
 view: web_sales_partition {
-  sql_table_name: TPC_DS_DEV.WEB_SALES_PARTITION ;;
+  sql_table_name: TPC_DS.WEB_SALES_PARTITION ;;
 
   dimension: ws_bill_addr_sk {
     type: number

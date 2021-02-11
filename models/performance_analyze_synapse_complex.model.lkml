@@ -57,6 +57,11 @@ explore: store_returns {
     relationship: many_to_one
     sql_on: ${store_returns.sr_store_sk} =  ${store.s_store_sk};;
   }
+  join:  item{
+    type: inner
+    relationship: many_to_one
+    sql_on: ${store_returns.sr_item_sk} =  ${item.i_item_sk};;
+  }
 }
 
 explore: store_returns_bkp {}

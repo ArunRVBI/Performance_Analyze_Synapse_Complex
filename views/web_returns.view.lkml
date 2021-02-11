@@ -1,5 +1,5 @@
 view: web_returns {
-  sql_table_name: TPC_DS_DEV.WEB_RETURNS ;;
+  sql_table_name: TPC_DS.WEB_RETURNS ;;
 
   dimension: wr_account_credit {
     type: number

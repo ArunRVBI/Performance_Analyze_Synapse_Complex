@@ -1,5 +1,5 @@
 view: web_page {
-  sql_table_name: TPC_DS_DEV.WEB_PAGE ;;
+  sql_table_name: TPC_DS.WEB_PAGE ;;
   drill_fields: [wp_web_page_id]
 
   dimension: wp_web_page_id {

@@ -1,5 +1,5 @@
 view: store {
-  sql_table_name: TPC_DS_DEV.STORE ;;
+  sql_table_name: TPC_DS.STORE ;;
   drill_fields: [s_store_id]
 
   dimension: s_store_id {

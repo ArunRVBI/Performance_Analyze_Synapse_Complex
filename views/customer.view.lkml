@@ -1,5 +1,5 @@
 view: customer {
-  sql_table_name: TPC_DS_DEV.CUSTOMER ;;
+  sql_table_name: TPC_DS.CUSTOMER ;;
   drill_fields: [c_customer_id]
 
   dimension: c_customer_id {
