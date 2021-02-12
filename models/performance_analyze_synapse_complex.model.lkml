@@ -107,7 +107,7 @@ explore: web_returns_bkp {}
 
 explore: web_sales {
   join:  date_dim{
-    type: left_outer
+    type: inner
     relationship: many_to_one
     sql_on: ${web_sales.ws_sold_date_sk} =  ${date_dim.d_date_sk};;
   }
