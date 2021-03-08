@@ -121,6 +121,72 @@ view: web_returns {
     sql: ${TABLE}.WR_WEB_PAGE_SK ;;
   }
 
+
+#For Charts
+  dimension: is_mtd{
+    type: yesno
+    sql:
+     ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
+      ;;
+  }
+  dimension: is_sply_mtd{
+    type: yesno
+    sql:
+      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
+      ;;
+  }
+  dimension: dateflag{
+    type: yesno
+    sql:
+      ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
+      )
+      or
+      ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
+      )
+      ;;
+  }
+  measure: currentyear_returnamt {
+    type: sum
+    sql:  ${TABLE}.WR_RETURN_AMT;;
+    filters: [is_mtd: "yes"]
+  }
+  measure: previousyear_returnamt {
+    type: sum
+    sql:  ${TABLE}.WR_RETURN_AMT;;
+    filters: [is_sply_mtd: "yes"]
+  }
+  measure: currentyear_returnshipcost {
+    type: sum
+    sql:  ${TABLE}.WR_RETURN_SHIP_COST;;
+    filters: [is_mtd: "yes"]
+  }
+  measure: previousyear_returnshipcost {
+    type: sum
+    sql:  ${TABLE}.WR_RETURN_SHIP_COST;;
+    filters: [is_sply_mtd: "yes"]
+  }
+  measure: filter_dateflag {
+    type: sum
+    sql:  1;;
+    filters: [dateflag: "yes"]
+  }
+
   measure: count {
     type: count
     drill_fields: []

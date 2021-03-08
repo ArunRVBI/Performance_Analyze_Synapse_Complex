@@ -277,6 +277,72 @@ view: store_sales {
     sql: ${TABLE}."SS_SALES_PRICE";;
     filters: [ss_issalesPriceTop10: "yes"]
   }
+
+#For Charts
+  dimension: dateflag{
+    type: yesno
+    sql:
+     ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
+      )
+      or
+      ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
+      and
+      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      and
+      ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
+      )
+      ;;
+  }
+
+
+  measure: currentyear_salesprice {
+    type: sum
+    sql:  ${TABLE}.SS_SALES_PRICE;;
+    filters: [is_mtd: "yes"]
+    value_format: "0.00"
+  }
+  measure: previousyear_salesprice {
+    type: sum
+    sql:  ${TABLE}.SS_SALES_PRICE;;
+    filters: [is_sply_mtd: "yes"]
+    value_format: "0.00"
+  }
+  measure: currentyear_listprice {
+    type: sum
+    sql:  ${TABLE}.SS_LIST_PRICE;;
+    filters: [is_mtd: "yes"]
+    value_format: "0.00"
+  }
+  measure: previousyear_listprice {
+    type: sum
+    sql:  ${TABLE}.SS_LIST_PRICE;;
+    filters: [is_sply_mtd: "yes"]
+    value_format: "0.00"
+  }
+  measure: currentyear_wholesalecost {
+    type: sum
+    sql:  ${TABLE}.SS_WHOLESALE_COST;;
+    filters: [is_mtd: "yes"]
+    value_format: "0.00"
+  }
+  measure: previousyear_wholesalecost {
+    type: sum
+    sql:  ${TABLE}.SS_WHOLESALE_COST;;
+    filters: [is_sply_mtd: "yes"]
+    value_format: "0.00"
+  }
+  measure: filter_dateflag {
+    type: sum
+    sql:  1;;
+    filters: [dateflag: "yes"]
+    value_format: "0.00"
+  }
+
+
   measure: count {
     type: count
     drill_fields: []

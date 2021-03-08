@@ -101,7 +101,13 @@ explore: time_dim {}
 
 explore: web_page {}
 
-explore: web_returns {}
+explore: web_returns {
+  join:  date_dim{
+    type: inner
+    relationship: many_to_one
+    sql_on: ${web_returns.wr_returned_date_sk} =  ${date_dim.d_date_sk};;
+  }
+}
 
 explore: web_returns_bkp {}
 
