@@ -183,7 +183,7 @@ view: store_returns {
     sql:
       ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
       and
-      smonth${date_dim.d_date} = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
       ;;
