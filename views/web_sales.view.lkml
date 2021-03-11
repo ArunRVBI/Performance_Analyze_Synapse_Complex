@@ -186,7 +186,7 @@ view: web_sales {
     sql:
       ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
       ;;
@@ -204,7 +204,7 @@ view: web_sales {
     sql:
       ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
       ;;
@@ -236,7 +236,7 @@ view: web_sales {
     sql:
       ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       ;;
   }
   dimension: previousYear{
@@ -244,7 +244,7 @@ view: web_sales {
     sql:
       ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       ;;
   }
   measure: currentyear_sales {
@@ -290,14 +290,14 @@ view: web_sales {
     sql:
      ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
       )
       or
       ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
       )

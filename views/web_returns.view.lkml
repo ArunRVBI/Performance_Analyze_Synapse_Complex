@@ -128,7 +128,7 @@ view: web_returns {
     sql:
      ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
       ;;
@@ -138,7 +138,7 @@ view: web_returns {
     sql:
       ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
       ;;
@@ -148,14 +148,14 @@ view: web_returns {
     sql:
       ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= {% parameter date_dim.datefilter %}
       )
       or
       ( ${date_dim.d_year} = year({% parameter date_dim.datefilter %})-1
       and
-      substring(${date_dim.d_month},6,2) = month({% parameter date_dim.datefilter %})
+      month${date_dim.d_date} = month({% parameter date_dim.datefilter %})
       and
       ${date_dim.d_date} <= DATEADD(day,-365,{% parameter date_dim.datefilter %})
       )
